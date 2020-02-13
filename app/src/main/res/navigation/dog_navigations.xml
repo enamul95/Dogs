@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/dog_navigations"
+    app:startDestination="@id/fragemntlist">
+
+    <fragment
+        android:id="@+id/fragemntlist"
+        android:name="com.era.dogs.view.Fragemntlist"
+        android:label="Fragemntlist" >
+        <action
+            android:id="@+id/action_to_detaail_fragments"
+            app:destination="@id/fragmentDeatals"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentDeatals"
+        android:name="com.era.dogs.view.FragmentDeatals"
+        android:label="FragmentDeatals" >
+        <action
+            android:id="@+id/action_to_list_fragments"
+            app:destination="@id/fragemntlist"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+
+        <argument
+            android:name="dogUuid"
+            android:defaultValue="0"
+            app:argType="integer"/>
+    </fragment>
+</navigation>
