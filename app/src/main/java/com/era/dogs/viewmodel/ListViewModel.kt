@@ -1,15 +1,18 @@
 package com.era.dogs.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.era.dogs.dao.DogDatabase
 import com.era.dogs.model.DogBreed
 import com.era.dogs.model.DogsApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
-class ListViewModel:ViewModel() {
+class ListViewModel(application: Application):BaseViewModel(application) {
 
    private val dogService = DogsApiService()
    private val disposable = CompositeDisposable()
@@ -43,9 +46,10 @@ class ListViewModel:ViewModel() {
            .subscribeWith(object : DisposableSingleObserver<List<DogBreed>>() {
                override fun onSuccess(dogList: List<DogBreed>) {
 
-                   dogs.value = dogList
-                   dogsLoadingError.value = false
-                   loading.value = false
+//                   dogs.value = dogList
+//                   dogsLoadingError.value = false
+//                   loading.value = false
+                   storingDogLocally(dogList)
                }
 
                override fun onError(e: Throwable) {
@@ -58,6 +62,33 @@ class ListViewModel:ViewModel() {
            })
        )
    }
+
+    private fun dogRetrive(dogList:List<DogBreed>){
+        dogs.value = dogList
+        dogsLoadingError.value = false
+        loading.value = false
+    }
+
+
+    private fun storingDogLocally(list:List<DogBreed>){
+        launch {
+         //   DogDatabase(getApplication()).dogDao().deleteAllDogs()
+            var dogDao =  DogDatabase(getApplication()).dogDao()
+            dogDao.deleteAllDogs()
+            var result = dogDao.insetAll(*list.toTypedArray())
+            var i = 0
+            while (i<result.size){
+                list[i].uuid = result[i].toInt()
+                ++i
+            }
+
+            dogRetrive(list)
+
+
+        }
+    }
+
+
 
     override fun onCleared() {
         super.onCleared()

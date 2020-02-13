@@ -7,6 +7,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.era.dogs.R
 import com.era.dogs.model.DogBreed
+import com.era.dogs.util.getProgressDrawble
+import com.era.dogs.util.loadImage
 import kotlinx.android.synthetic.main.item_dog.view.*
 
 class DogsListAdapter(var dogList:ArrayList<DogBreed>):RecyclerView.Adapter<DogsListAdapter.DogViewHolder>()
@@ -30,6 +32,8 @@ class DogsListAdapter(var dogList:ArrayList<DogBreed>):RecyclerView.Adapter<Dogs
 
         holder.view.name.text = dogList[position].dogBreed
         holder.view.lifespan.text = dogList[position].lifeSpan
+
+        holder.view.img_dog_image.loadImage(dogList[position].imageUrl, getProgressDrawble(holder.view.img_dog_image.context))
         holder.view.setOnClickListener {
             Navigation.findNavController(it).navigate(FragemntlistDirections.actionToDetaailFragments())
         }
